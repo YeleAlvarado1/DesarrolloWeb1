@@ -4,7 +4,7 @@ app = Flask(__name__)
 def hello_world():
     return 'Hello, World!'
 
-@app.route('/usuario/<nombre>')
+@app.route('/usuarios/<nombre>')
 def usuario(nombre):
     return f'Bienvenido, {nombre}!'    
 if __name__ == "__main__":
