@@ -1,22 +1,22 @@
-from flask import Flask 
+from flask import Flask, render_template
+
 app = Flask(__name__)
-@app.route('/')
-def hello_world():
-    return 'Bienvenido a JAZ Climatización Instalación y mantenimiento de aire acondicionado'
-# Ruta usuarios
-@app.route("/usuarios")
-def usuarios():
-    return "Área de usuarios Consulta tu servicio de climatización."
 
-# Ruta contacto
-@app.route("/contacto")
-def contacto():
-    return "Contacto JAZ Climatización | Correo: jazclimatizacion@gmail.com | WhatsApp: +593 99 456 7890"
+@app.route("/")
+def index():
+    return render_template("index.html")
 
-# Ruta dinámica para clientes
-@app.route("/cliente/<nombre>")
-def cliente(nombre):
-    return f"Hola {nombre}, tu solicitud de servicio en JAZ Climatización está en proceso."
- 
+@app.route("/servicios")
+def servicios():
+    return render_template("servicios.html")
+
+@app.route("/clientes")
+def clientes():
+    return render_template("clientes.html")
+
+@app.route("/about")
+def about():
+    return render_template("about.html")
+
 if __name__ == "__main__":
     app.run(debug=True)

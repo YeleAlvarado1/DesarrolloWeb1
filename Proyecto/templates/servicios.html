@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container py-5">
+
+<h2 class="text-center mb-4">Nuestros Servicios</h2>
+
+<div class="row g-4">
+
+    <div class="col-md-4">
+        <div class="card shadow">
+            <img src="{{ url_for('static', filename='img/Aires.jpg') }}" class="card-img-top">
+            <div class="card-body">
+                <h5>Aires Acondicionados</h5>
+                <p>Instalación y mantenimiento profesional.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card shadow">
+            <img src="{{ url_for('static', filename='img/linea-blanca.webp') }}" class="card-img-top">
+            <div class="card-body">
+                <h5>Línea Blanca</h5>
+                <p>Reparación de lavadoras y refrigeradores.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card shadow">
+            <img src="{{ url_for('static', filename='img/Soporte.png') }}" class="card-img-top">
+            <div class="card-body">
+                <h5>Soporte Técnico</h5>
+                <p>Diagnósticos y garantía en cada servicio.</p>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<hr class="my-5">
+
+<h2 class="text-center mb-4">Tarifas</h2>
+
+<table class="table table-striped text-center">
+    <thead class="table-dark">
+        <tr>
+            <th>Servicio</th>
+            <th>Costo</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Diagnóstico A/C</td>
+            <td>$25 - $35</td>
+        </tr>
+        <tr>
+            <td>Mantenimiento Lavadora</td>
+            <td>$40 - $60</td>
+        </tr>
+    </tbody>
+</table>
+
+<hr class="my-5">
+
+<h2 class="text-center mb-4">Conoce Nuestro Trabajo</h2>
+
+<div class="ratio ratio-16x9 shadow rounded">
+    <video controls>
+        <source src="{{ url_for('static', filename='video1/CLIMATIZACION.mp4') }}" type="video/mp4">
+    </video>
+</div>
+
+</div>
+
+{% endblock %}
