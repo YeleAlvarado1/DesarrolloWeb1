@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>Datos guardados</h2>
+
+<table border="1">
+<tr>
+<th>Nombre</th>
+<th>Precio</th>
+</tr>
+
+{% for d in datos %}
+<tr>
+<td>{{ d.nombre }}</td>
+<td>{{ d.precio }}</td>
+</tr>
+{% endfor %}
+
+</table>
+
+{% endblock %}
