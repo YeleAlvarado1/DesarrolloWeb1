@@ -1,3 +1,6 @@
 Aire Acondicionado LG 1000 BTU ,580
 Aire Acondicionado LG 18000 BTU ,620
 Aire Acondiciona samsung 12000 BTU ,450.0
+Aire Acondiciona LG 12000 BTU ,250.0
+Aire Acondiciona LG 12000 BTU ,250.0
+Aire Acondicionado LG 24000 BTU ,860.0

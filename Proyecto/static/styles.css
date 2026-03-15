@@ -1,24 +1,77 @@
-body {
+/* ===============================
+ESTILO GENERAL
+=============================== */
+
+body{
     font-family: Arial, sans-serif;
     background-color: #f4f6f9;
-    margin: 0;
+    margin:0;
 }
 
-header {
-    background-color: #003366;
-    color: white;
-    padding: 20px;
+/* ===============================
+NAVBAR
+=============================== */
+
+.navbar-brand{
+    font-weight:bold;
 }
 
-nav a {
-    color: white;
-    margin-right: 15px;
-    text-decoration: none;
+.navbar .nav-link.active{
+    color:#ffc107 !important;
+    font-weight:600;
 }
 
-footer {
-    background-color: #003366;
-    color: white;
-    padding: 10px;
-    margin-top: 40px;
+/* ===============================
+CONTENIDO
+=============================== */
+
+main{
+    min-height:70vh;
+}
+
+/* ===============================
+TARJETAS (SERVICIOS)
+=============================== */
+
+.card{
+    border:none;
+    transition:0.3s;
+}
+
+.card:hover{
+    transform:translateY(-5px);
+    box-shadow:0 8px 20px rgba(0,0,0,0.2);
+}
+
+/* ===============================
+TABLAS (PRODUCTOS)
+=============================== */
+
+table{
+    border-radius:10px;
+    overflow:hidden;
+}
+
+table th{
+    background:#212529;
+    color:white;
+}
+
+/* ===============================
+BOTONES
+=============================== */
+
+.btn-warning{
+    color:black;
+}
+
+/* ===============================
+FOOTER
+=============================== */
+
+footer{
+    text-align:center;
+    background:#222;
+    color:white;
+    padding:15px;
 }

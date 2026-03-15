@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for
-from database import get_connection
+from conexion.conexion import get_connection
 
 # importar clases y funciones
 from inventario import Producto, Inventario
@@ -20,9 +20,8 @@ p2 = Producto(2, "Filtro de aire", 10, 25)
 inventario.agregar_producto(p1)
 inventario.agregar_producto(p2)
 
-
 # ===============================
-# PAGINA PRINCIPAL
+# PAGINAS PRINCIPALES
 # ===============================
 
 @app.route("/")
@@ -40,8 +39,8 @@ def clientes():
     return render_template("clientes.html")
 
 
-@app.route("/about")
-def about():
+@app.route("/acerca")
+def acerca():
     return render_template("about.html")
 
 
@@ -53,10 +52,10 @@ def about():
 def productos():
 
     conn = get_connection()
+    cursor = conn.cursor()
 
-    productos = conn.execute(
-        "SELECT * FROM productos"
-    ).fetchall()
+    cursor.execute("SELECT * FROM productos")
+    productos = cursor.fetchall()
 
     conn.close()
 
@@ -77,16 +76,16 @@ def crear_producto():
         precio = float(request.form["precio"])
 
         conn = get_connection()
+        cursor = conn.cursor()
 
-        conn.execute(
-            "INSERT INTO productos(nombre,cantidad,precio) VALUES (?,?,?)",
+        cursor.execute(
+            "INSERT INTO productos(nombre,cantidad,precio) VALUES (%s,%s,%s)",
             (nombre, cantidad, precio)
         )
 
         conn.commit()
         conn.close()
 
-        # guardar también en archivos
         guardar_txt(nombre, precio)
         guardar_json(nombre, precio)
         guardar_csv(nombre, precio)
@@ -104,6 +103,7 @@ def crear_producto():
 def editar_producto(id):
 
     conn = get_connection()
+    cursor = conn.cursor()
 
     if request.method == "POST":
 
@@ -111,8 +111,8 @@ def editar_producto(id):
         cantidad = int(request.form["cantidad"])
         precio = float(request.form["precio"])
 
-        conn.execute(
-            "UPDATE productos SET nombre=?, cantidad=?, precio=? WHERE id=?",
+        cursor.execute(
+            "UPDATE productos SET nombre=%s, cantidad=%s, precio=%s WHERE id=%s",
             (nombre, cantidad, precio, id)
         )
 
@@ -121,9 +121,8 @@ def editar_producto(id):
 
         return redirect(url_for("productos"))
 
-    producto = conn.execute(
-        "SELECT * FROM productos WHERE id=?", (id,)
-    ).fetchone()
+    cursor.execute("SELECT * FROM productos WHERE id=%s", (id,))
+    producto = cursor.fetchone()
 
     conn.close()
 
@@ -138,9 +137,11 @@ def editar_producto(id):
 def eliminar_producto(id):
 
     conn = get_connection()
+    cursor = conn.cursor()
 
-    conn.execute(
-        "DELETE FROM productos WHERE id=?", (id,)
+    cursor.execute(
+        "DELETE FROM productos WHERE id=%s",
+        (id,)
     )
 
     conn.commit()
@@ -150,7 +151,7 @@ def eliminar_producto(id):
 
 
 # ===============================
-# MOSTRAR DATOS DESDE TXT
+# DATOS TXT
 # ===============================
 
 @app.route("/datos")
@@ -162,8 +163,9 @@ def ver_datos():
 
 
 # ===============================
-# EJECUTAR APLICACIÓN
+# RUN
 # ===============================
 
 if __name__ == "__main__":
     app.run(debug=True)
+

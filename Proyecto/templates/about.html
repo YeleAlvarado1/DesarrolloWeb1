@@ -2,12 +2,71 @@
 
 {% block content %}
 
-<div class="container py-5">
-    <h2>Acerca de Nosotros</h2>
-    <p>
-        Empresa especializada en climatización residencial e industrial.
-        Técnicos certificados y atención 24/7.
-    </p>
+<div class="container mt-5">
+
+<div class="row align-items-center">
+
+<div class="col-md-6">
+<h2>Acerca de Nosotros</h2>
+
+<p class="mt-3">
+Somos una empresa especializada en climatización residencial e industrial.
+Ofrecemos instalación, mantenimiento y reparación de equipos de aire acondicionado
+y electrodomésticos de línea blanca.
+</p>
+
+<p>
+Nuestro equipo está formado por técnicos certificados con más de
+10 años de experiencia brindando soluciones rápidas y confiables.
+</p>
+
+<p>
+Trabajamos con compromiso, responsabilidad y atención personalizada
+para garantizar la satisfacción de nuestros clientes.
+</p>
+
+</div>
+
+<div class="col-md-6 text-center">
+<img src="{{ url_for('static', filename='img/tecnico.png') }}"
+class="img-fluid rounded shadow"
+alt="Servicio técnico">
+</div>
+
+</div>
+
+<hr class="my-5">
+
+<h3 class="text-center mb-4">¿Por qué elegirnos?</h3>
+
+<div class="row text-center">
+
+<div class="col-md-4">
+<div class="card p-4 shadow-sm">
+    <i class="fas fa-star fa-3x text-primary mb-3"></i>
+<h5>Experiencia</h5>
+<p>Más de 10 años brindando servicios de climatización y reparación.</p>
+</div>
+</div>
+
+<div class="col-md-4">
+<div class="card p-4 shadow-sm">
+    <i class="fas fa-user-cog fa-3x text-primary mb-3"></i>
+<h5>Técnicos certificados</h5>
+<p>Profesionales capacitados para garantizar trabajos de calidad.</p>
+</div>
+</div>
+
+<div class="col-md-4">
+<div class="card p-4 shadow-sm">
+    <i class="fas fa-bolt fa-3x text-primary mb-3"></i>
+<h5>Atención rápida</h5>
+<p>Servicio ágil y atención personalizada para cada cliente.</p>
+</div>
+</div>
+
+</div>
+
 </div>
 
 {% endblock %}
