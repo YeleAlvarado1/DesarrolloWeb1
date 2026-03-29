@@ -1,10 +1,21 @@
 from flask import Flask, render_template, request, redirect, url_for
 from conexion.conexion import get_connection
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
-from models import Usuario
+from models.usuario import Usuario
 from werkzeug.security import generate_password_hash, check_password_hash
+from fpdf import FPDF
+from flask import make_response
 
-# importar inventario
+# SERVICES PRODUCTOS
+from services.producto_service import (
+    obtener_productos,
+    insertar_producto,
+    eliminar_producto,
+    actualizar_producto,
+    obtener_producto_por_id
+)
+
+# inventario
 from inventario import Producto, Inventario
 from inventario import guardar_txt, guardar_json, guardar_csv, leer_txt
 
@@ -12,7 +23,7 @@ app = Flask(__name__)
 app.secret_key = "clave_secreta"
 
 # ===============================
-# CONFIGURAR FLASK LOGIN
+# FLASK LOGIN
 # ===============================
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -32,7 +43,7 @@ def load_user(user_id):
     return None
 
 # ===============================
-# INVENTARIO EN MEMORIA
+# INVENTARIO
 # ===============================
 inventario = Inventario()
 
@@ -42,8 +53,32 @@ p2 = Producto(2, "Filtro de aire", 10, 25)
 inventario.agregar_producto(p1)
 inventario.agregar_producto(p2)
 
+
 # ===============================
-# PAGINAS PRINCIPALES
+# PDF reporte
+# ===============================
+@app.route("/reporte")
+@login_required
+def reporte_pdf():
+
+    productos = obtener_productos()
+
+    pdf = FPDF()
+    pdf.add_page()
+    pdf.set_font("Arial", size=12)
+
+    pdf.cell(200, 10, txt="Reporte JAZ Climatización", ln=True)
+
+    for p in productos:
+        pdf.cell(200, 10, txt=f"{p[1]} - ${p[3]}", ln=True)
+
+    response = make_response(pdf.output(dest='S').encode('latin-1'))
+    response.headers.set('Content-Type', 'application/pdf')
+    response.headers.set('Content-Disposition', 'attachment', filename='reporte.pdf')
+
+    return response
+# ===============================
+# PAGINAS
 # ===============================
 @app.route("/")
 def index():
@@ -62,22 +97,16 @@ def acerca():
     return render_template("about.html")
 
 # ===============================
-# PRODUCTOS (PROTEGIDO)
+# PRODUCTOS
 # ===============================
 @app.route("/productos")
 @login_required
 def productos():
-    conn = get_connection()
-    cursor = conn.cursor()
-
-    cursor.execute("SELECT * FROM productos")
-    productos = cursor.fetchall()
-
-    conn.close()
+    productos = obtener_productos()
     return render_template("productos_listar.html", productos=productos)
 
 # ===============================
-# CREAR PRODUCTO
+# CREAR
 # ===============================
 @app.route("/productos/crear", methods=["GET", "POST"])
 @login_required
@@ -88,16 +117,7 @@ def crear_producto():
         cantidad = int(request.form["cantidad"])
         precio = float(request.form["precio"])
 
-        conn = get_connection()
-        cursor = conn.cursor()
-
-        cursor.execute(
-            "INSERT INTO productos(nombre,cantidad,precio) VALUES (%s,%s,%s)",
-            (nombre, cantidad, precio)
-        )
-
-        conn.commit()
-        conn.close()
+        insertar_producto(nombre, cantidad, precio)
 
         guardar_txt(nombre, precio)
         guardar_json(nombre, precio)
@@ -108,49 +128,32 @@ def crear_producto():
     return render_template("productos_crear.html")
 
 # ===============================
-# EDITAR PRODUCTO
+# EDITAR
 # ===============================
 @app.route("/productos/editar/<int:id>", methods=["GET", "POST"])
 @login_required
 def editar_producto(id):
-
-    conn = get_connection()
-    cursor = conn.cursor()
 
     if request.method == "POST":
         nombre = request.form["nombre"]
         cantidad = int(request.form["cantidad"])
         precio = float(request.form["precio"])
 
-        cursor.execute(
-            "UPDATE productos SET nombre=%s, cantidad=%s, precio=%s WHERE id=%s",
-            (nombre, cantidad, precio, id)
-        )
+        actualizar_producto(id, nombre, cantidad, precio)
 
-        conn.commit()
-        conn.close()
         return redirect(url_for("productos"))
 
-    cursor.execute("SELECT * FROM productos WHERE id=%s", (id,))
-    producto = cursor.fetchone()
-    conn.close()
+    producto = obtener_producto_por_id(id)
 
     return render_template("productos_editar.html", producto=producto)
 
 # ===============================
-# ELIMINAR PRODUCTO
+# ELIMINAR
 # ===============================
 @app.route("/productos/eliminar/<int:id>")
 @login_required
-def eliminar_producto(id):
-
-    conn = get_connection()
-    cursor = conn.cursor()
-
-    cursor.execute("DELETE FROM productos WHERE id=%s", (id,))
-    conn.commit()
-    conn.close()
-
+def eliminar_producto_view(id):
+    eliminar_producto(id)
     return redirect(url_for("productos"))
 
 # ===============================
@@ -162,7 +165,7 @@ def ver_datos():
     return render_template("datos.html", datos=datos)
 
 # ===============================
-# REGISTRO DE USUARIOS
+# REGISTRO
 # ===============================
 @app.route("/registro", methods=["GET", "POST"])
 def registro():
@@ -170,7 +173,7 @@ def registro():
     if request.method == "POST":
         nombre = request.form["nombre"]
         email = request.form["email"]
-        password = generate_password_hash(request.form["password"])  # 🔐 cifrado
+        password = generate_password_hash(request.form["password"], method='pbkdf2:sha256')
 
         conn = get_connection()
         cursor = conn.cursor()
@@ -188,15 +191,15 @@ def registro():
     return render_template("registro.html")
 
 # ===============================
-# LOGIN USUARIOS
+# LOGIN
 # ===============================
 @app.route("/login", methods=["GET", "POST"])
 def login():
 
     if request.method == "POST":
 
-        email = request.form["email"]
-        password = request.form["password"]
+        email = request.form["email"].strip()
+        password = request.form["password"].strip()
 
         conn = get_connection()
         cursor = conn.cursor()
@@ -206,15 +209,40 @@ def login():
 
         conn.close()
 
-        if user and check_password_hash(user[3], password):
-            usuario = Usuario(user[0], user[1], user[2], user[3])
-            login_user(usuario)
-            return redirect(url_for("productos"))
+        print("USER:", user)
+
+        if user:
+            password_bd = user[-1]
+
+            if isinstance(password_bd, bytes):
+                password_bd = password_bd.decode('utf-8')
+
+            password_bd = password_bd.strip()
+
+            print("COMPARANDO...")
+            print(password_bd)
+            print(password)
+
+            resultado = check_password_hash(password_bd, password)
+
+            print("RESULTADO:", resultado)
+
+            if resultado:
+                usuario = Usuario(user[0], user[1], user[2], user[3])
+                login_user(usuario)
+
+                print("LOGIN EXITOSO")
+
+                return redirect(url_for("productos"))
+            else:
+                print("ERROR PASSWORD")
+                return render_template("login.html", error="Credenciales incorrectas")
+
         else:
+            print("ERROR USER")
             return render_template("login.html", error="Credenciales incorrectas")
 
     return render_template("login.html")
-
 # ===============================
 # LOGOUT
 # ===============================
