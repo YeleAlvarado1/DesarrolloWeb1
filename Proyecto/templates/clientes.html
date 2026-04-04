@@ -2,26 +2,46 @@
 
 {% block content %}
 
-<div class="container py-5">
-    <h2 class="text-center mb-4">Registro de Cliente</h2>
+<h2>Listado de Clientes</h2>
 
-    <form class="col-md-6 mx-auto shadow p-4 bg-light rounded">
+<form action="/reporte_ventas" method="POST" class="d-flex gap-2 mb-3">
+    <input type="date" name="fecha_inicio" required>
+    <input type="date" name="fecha_fin" required>
 
-        <div class="mb-3">
-            <input type="text" class="form-control" placeholder="Nombre del cliente">
-        </div>
+    <button class="btn btn-success">
+        Reporte de Ventas
+    </button>
+</form>
 
-        <div class="mb-3">
-            <input type="email" class="form-control" placeholder="Correo electrónico">
-        </div>
+<table class="table table-bordered">
 
-        <div class="mb-3">
-            <textarea class="form-control" rows="3" placeholder="Comentario"></textarea>
-        </div>
+    <thead class="table-dark">
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Correo</th>
+            <th>Teléfono</th>
+            <th>Dirección</th>
+            <th>Fecha Registro</th>
+            <th>Venta ID</th>
+            <th>Fecha Venta</th>
+        </tr>
+    </thead>
 
-        <button class="btn btn-primary w-100">Enviar</button>
+    <tbody>
+        {% for d in datos %}
+        <tr>
+            <td>{{ d[0] }}</td>
+            <td>{{ d[1] }}</td>
+            <td>{{ d[2] }}</td>
+            <td>{{ d[3] }}</td>
+            <td>{{ d[4] }}</td>
+            <td>{{ d[5] }}</td>
+            <td>{{ d[6] if d[6] else '-' }}</td>
+            <td>{{ d[7] if d[7] else '-' }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
 
-    </form>
-</div>
-
+</table>
 {% endblock %}

@@ -65,6 +65,51 @@
 
 <hr class="my-5">
 
+<!--NUEVA SECCIÓN PRODUCTOS -->
+<h2 class="text-center mb-4">Equipos Disponibles</h2>
+
+<div class="row g-4">
+
+{% for p in productos %}
+    <div class="col-md-4">
+        <div class="card shadow h-100">
+
+            <div class="card-body">
+                <h5 class="card-title">{{ p[1] }}</h5>
+
+                <p><strong>Precio:</strong> ${{ p[3] }}</p>
+                <p><strong>Stock:</strong> {{ p[2] }}</p>
+
+                <p style="font-size: 14px;">
+                    Incluye:<br>
+                    ✔ Split<br>
+                    ✔ Compresor<br>
+                    ✔ Control remoto<br>
+                    ✔ 3m de tubería<br>
+                    ✔ Cableado<br>
+                    ✔ Instalación incluida
+                </p>
+
+                {% if p[2] > 0 %}
+                    <a href="/carrito/agregar/{{ p[0] }}" class="btn btn-success w-100">
+                        🛒 Agregar al carrito
+                    </a>
+                {% else %}
+                    <button class="btn btn-danger w-100" disabled>
+                        Sin stock
+                    </button>
+                {% endif %}
+
+            </div>
+
+        </div>
+    </div>
+{% endfor %}
+
+</div>
+
+<hr class="my-5">
+
 <h2 class="text-center mb-4">Conoce Nuestro Trabajo</h2>
 
 <div class="ratio ratio-16x9 shadow rounded">

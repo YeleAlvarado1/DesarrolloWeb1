@@ -10,7 +10,15 @@
 
 <div class="mb-3">
 <label>Nombre del producto</label>
-<input type="text" name="nombre" value="{{ producto.nombre }}" class="form-control">
+
+<select name="nombre" class="form-select mb-3" required>
+    {% for p in productos %}
+        <option value="{{p[1]}}"
+            {% if p[1] == producto[1] %} selected {% endif %}>
+            {{p[1]}}
+        </option>
+    {% endfor %}
+</select>
 </div>
 
 <div class="mb-3">

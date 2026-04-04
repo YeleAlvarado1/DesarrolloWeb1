@@ -6,6 +6,7 @@ body{
     font-family: Arial, sans-serif;
     background-color: #f4f6f9;
     margin:0;
+    padding:0;
 }
 
 /* ===============================
@@ -76,7 +77,9 @@ footer{
     padding:15px;
 }
 
-/* ===== LOGIN ===== */
+/* ===============================
+LOGIN
+=============================== */
 
 .login-body {
     margin: 0;
@@ -84,7 +87,7 @@ footer{
     font-family: Arial, sans-serif;
 
     background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
-                url("../img/fondo.jpg");
+                url("img/tecnico.png"); 
 
     background-size: cover;
     background-position: center;
@@ -104,7 +107,6 @@ footer{
     border-radius: 10px;
     width: 300px;
     text-align: center;
-
     box-shadow: 0px 0px 15px rgba(0,0,0,0.3);
 }
 
@@ -116,7 +118,6 @@ footer{
     width: 100%;
     padding: 10px;
     margin: 10px 0;
-
     border: 1px solid #ccc;
     border-radius: 5px;
 }
@@ -128,20 +129,17 @@ footer{
     color: white;
     border: none;
     border-radius: 5px;
-
     cursor: pointer;
 }
 
 .login-box button:hover {
     background: #0056b3;
 }
-/* Quitar márgenes raros */
-body {
-    margin: 0;
-    padding: 0;
-}
 
-/* Contenedor principal */
+/* ===============================
+LOGIN OVERLAY
+=============================== */
+
 .login-overlay {
     position: relative;
     width: 100%;
@@ -153,67 +151,136 @@ body {
     align-items: center;
 }
 
-/* Imagen de fondo */
 .login-background {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-
     object-fit: cover;
-
     z-index: 1;
 }
 
-/* Capa oscura encima de la imagen */
 .login-overlay::before {
     content: "";
     position: absolute;
     width: 100%;
     height: 100%;
-
     background: rgba(0, 0, 0, 0.4);
-
     z-index: 2;
 }
 
-/* Caja del formulario */
 .login-box {
     position: relative;
     z-index: 3;
-
     background: rgba(255, 255, 255, 0.95);
     padding: 30px;
     width: 320px;
     border-radius: 10px;
-
     text-align: center;
-
     box-shadow: 0px 5px 20px rgba(0,0,0,0.3);
 }
 
-/* Inputs bonitos */
-.login-box input {
-    width: 100%;
-    padding: 10px;
-    margin: 10px 0;
+/* ===============================
+FONDO INICIO
+=============================== */
 
-    border: 1px solid #ccc;
-    border-radius: 5px;
+.inicio-fondo {
+    background: url("img/fondo.png") no-repeat center center;
+    background-size: cover;
+    min-height: 550px;
+
+    display: flex;
+    align-items: center;
+    position: relative;
 }
 
-/* Botón */
-.login-box button {
+/* capa oscura */
+.inicio-fondo::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
-    padding: 10px;
-    background: #007bff;
+    height: 100%;
+
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1;
+}
+
+/* contenido encima */
+.inicio-fondo .container {
+    position: relative;
+    z-index: 2;
+    color: white;
+}
+.card {
+    border: none;
+}
+
+.card input:focus {
+    border-color: #000;
+    box-shadow: 0 0 5px rgba(0,0,0,0.3);
+}
+.btn-pdf {
+    background: linear-gradient(135deg, #007bff, #00c6ff);
     color: white;
     border: none;
-    border-radius: 5px;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-weight: bold;
     cursor: pointer;
+    transition: 0.3s;
 }
 
-.login-box button:hover {
-    background: #0056b3;
+.btn-pdf:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+.barra-superior {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap; /* por si se hace pequeño */
+}
+
+/* Título */
+.barra-superior h2 {
+    margin: 0;
+    margin-right: auto; /* empuja todo a la derecha */
+}
+
+/* Botón agregar */
+.btn-agregar {
+    background-color: #007bff;
+    color: white;
+    padding: 8px 14px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+/* Formulario alineado */
+.form-reporte {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Inputs */
+.form-reporte input {
+    padding: 6px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+/* Botón PDF */
+.btn-pdf {
+    background: linear-gradient(135deg, #00c6ff, #007bff);
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
 }

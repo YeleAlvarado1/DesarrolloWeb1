@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container mt-5">
+    <h2 class="text-center">Contactos recibidos</h2>
+
+    <table class="table table-bordered mt-4">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Correo</th>
+                <th>Mensaje</th>
+                <th>Fecha</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for c in contactos %}
+            <tr>
+                <td>{{ c[1] }}</td>
+                <td>{{ c[2] }}</td>
+                <td>{{ c[3] }}</td>
+                <td>{{ c[4] }}</td>
+                <td>
+    {% if c[5] == 'leido' %}
+        <span class="badge bg-success">Leído</span>
+    {% else %}
+        <span class="badge bg-warning text-dark">Pendiente</span>
+    {% endif %}
+</td>
+
+                <td>
+                    <a href="/contacto/leido/{{ c[0] }}" class="btn btn-success btn-sm">Leído</a>
+                    <a href="/contacto/responder/{{ c[0] }}" class="btn btn-primary btn-sm">Responder</a>
+                    <a href="/contacto/eliminar/{{ c[0] }}" 
+   class="btn btn-danger btn-sm"
+   onclick="return confirm('¿Seguro que deseas eliminar este contacto?')">
+   Eliminar
+</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

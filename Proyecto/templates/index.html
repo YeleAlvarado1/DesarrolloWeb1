@@ -2,27 +2,100 @@
 
 {% block content %}
 
-<section class="py-5 text-white" style="background: linear-gradient(to right, #0f4c75, #3282b8);">
+<!-- HERO CON FONDO -->
+<section class="inicio-fondo py-5">
     <div class="container">
-        <div class="row align-items-center">
+        <h1>Confort y climatización profesional</h1>
+        <h3>
+            Instalación, mantenimiento y reparación de aire acondicionado.
+            <h4> Trabajamos con LG, Samsung, TCL, RCA y más.</h4>
+        </h3>
+        <a href="/contacto" class="btn btn-warning">Solicitar presupuesto</a>
+    </div>
+</section>
 
-            <div class="col-md-6">
-                <p>
-                    Confía en expertos certificados para tu confort.
-                    Ofrecemos mantenimiento y reparación profesional de climatización y línea blanca.
-                </p>
-                <a href="{{ url_for('clientes') }}" class="btn btn-warning">
-                    Solicita tu Presupuesto
-                </a>
+<!-- SERVICIOS -->
+<section class="container mt-5">
+    <h2 class="text-center mb-4">Nuestros Servicios</h2>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card p-3 shadow text-center">
+                <img src="{{ url_for('static', filename='img/instalacion.png') }}" class="img-fluid mb-3">
+                <h4>Instalación</h4>
+                <p>Instalación profesional de equipos de aire acondicionado.</p>
             </div>
+        </div>
 
-            <div class="col-md-6 text-center">
-                <img src="{{ url_for('static', filename='img/Confia en expertos para tu confort.png') }}"
-                     class="img-fluid rounded shadow">
+        <div class="col-md-4">
+            <div class="card p-3 shadow text-center">
+                <img src="{{ url_for('static', filename='img/mantenimiento.png') }}" class="img-fluid mb-3">
+                <h4>Mantenimiento</h4>
+                <p>Limpieza, revisión y optimización del sistema.</p>
             </div>
+        </div>
 
+        <div class="col-md-4">
+            <div class="card p-3 shadow text-center">
+                <img src="{{ url_for('static', filename='img/reparacion.png') }}" class="img-fluid mb-3">
+                <h4>Reparación</h4>
+                <p>Diagnóstico y solución de fallas técnicas.</p>
+            </div>
         </div>
     </div>
+</section>
+
+<!-- PRODUCTOS -->
+<section class="container mt-5">
+    <h2 class="text-center mb-4">Productos Destacados</h2>
+
+    <div class="row">
+
+        <div class="col-md-3">
+            <div class="card p-3 shadow text-center">
+                <img src="{{ url_for('static', filename='img/lg.png') }}" class="img-fluid mb-2">
+                <h5>LG 12000 BTU</h5>
+                <p>$450</p>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card p-3 shadow text-center">
+                <img src="{{ url_for('static', filename='img/samsung.png') }}" class="img-fluid mb-2">
+                <h5>Samsung 24000 BTU</h5>
+                <p>$900</p>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card p-3 shadow text-center">
+                <img src="{{ url_for('static', filename='img/tcl.png') }}" class="img-fluid mb-2">
+                <h5>TCL 12000 BTU</h5>
+                <p>$430</p>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card p-3 shadow text-center">
+                <img src="{{ url_for('static', filename='img/rca.png') }}" class="img-fluid mb-2">
+                <h5>RCA 18000 BTU</h5>
+                <p>$520</p>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- CONTACTO -->
+<section class="container mt-5 mb-5">
+    <h2 class="text-center mb-4">Solicita tu presupuesto</h2>
+
+    <form method="POST" action="/contacto" class="mt-4">
+        <input type="text" name="nombre" class="form-control mb-3" placeholder="Nombre">
+        <input type="email" name="correo" class="form-control mb-3" placeholder="Correo">
+        <textarea name="mensaje" class="form-control mb-3" placeholder="Describe tu necesidad"></textarea>
+        <button class="btn btn-primary w-100">Enviar</button>
+    </form>
 </section>
 
 {% endblock %}

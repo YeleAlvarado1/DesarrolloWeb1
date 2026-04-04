@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container mt-5">
+    <h2>Responder mensaje</h2>
+
+    <p><strong>Cliente:</strong> {{ contacto[1] }}</p>
+    <p><strong>Mensaje:</strong> {{ contacto[3] }}</p>
+
+    <form method="POST">
+        <textarea name="respuesta" class="form-control mb-3" placeholder="Escribe la respuesta"></textarea>
+        <button class="btn btn-success">Enviar respuesta</button>
+    </form>
+</div>
+
+{% endblock %}

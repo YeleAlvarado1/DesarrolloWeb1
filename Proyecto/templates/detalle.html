@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container py-5">
+
+    <h2 class="mb-4 text-center">Finalizar Compra</h2>
+
+    <!--DETALLE DE LO QUE INCLUYE -->
+    <div class="card shadow p-4 mb-4">
+
+        <h5>Incluye el equipo:</h5>
+
+        <ul>
+            <li>Instalación</li>
+            <li>Split</li>
+            <li>Compresor</li>
+            <li>Control remoto</li>
+            <li>3 metros de tubería</li>
+            <li>Cableado</li>
+        </ul>
+
+    </div>
+
+    <!-- FORMULARIO CLIENTE -->
+    <div class="card shadow p-4">
+
+        <h4 class="mb-3">Datos del Cliente</h4>
+
+        <form action="/finalizar_compra" method="POST">
+
+            <div class="mb-3">
+                <input type="text" name="nombre" class="form-control" placeholder="Nombre completo" required>
+            </div>
+
+            <div class="mb-3">
+                <input type="email" name="correo" class="form-control" placeholder="Correo electrónico" required>
+            </div>
+
+            <div class="mb-3">
+                <input type="text" name="telefono" class="form-control" placeholder="Teléfono" required>
+            </div>
+
+            <div class="mb-3">
+                <input type="text" name="direccion" class="form-control" placeholder="Dirección" required>
+            </div>
+
+            <button type="submit" class="btn btn-success w-100">
+                Confirmar compra
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

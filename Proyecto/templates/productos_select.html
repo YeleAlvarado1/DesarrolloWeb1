@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+    <h2>Seleccionar Producto</h2>
+
+    <form method="POST">
+
+        <label>Elige un producto:</label>
+
+        <select name="producto_id" class="form-control mb-3" required>
+            {% for p in productos %}
+                <option value="{{p[0]}}">
+                    {{p[1]}} - ${{p[3]}}
+                </option>
+            {% endfor %}
+        </select>
+
+        <button type="submit" class="btn btn-primary">
+            ✏️ Editar
+        </button>
+
+    </form>
+
+</div>
+
+{% endblock %}

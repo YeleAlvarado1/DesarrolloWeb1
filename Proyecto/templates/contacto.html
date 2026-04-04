@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Contáctanos</h2>
+
+    <form method="POST" action="/contacto">
+
+        <input type="text" name="nombre" class="form-control mb-3" placeholder="Nombre" required>
+
+        <input <input 
+    type="tel" 
+    name="telefono" 
+    class="form-control mb-3" 
+    placeholder="Teléfono" 
+    pattern="[0-9]{10}" 
+    title="Solo números (10 dígitos)" 
+    required> 
+    <script>
+document.querySelector('input[name="telefono"]').addEventListener('input', function(e) {
+    this.value = this.value.replace(/[^0-9]/g, '');
+});
+</script>
+
+        <input type="email" name="correo" class="form-control mb-3" placeholder="Correo" required>
+
+        <textarea name="mensaje" class="form-control mb-3" placeholder="Escribe tu mensaje" required></textarea>
+
+        <button class="btn btn-primary w-100">Enviar</button>
+
+    </form>
+</div>
+
+{% endblock %}

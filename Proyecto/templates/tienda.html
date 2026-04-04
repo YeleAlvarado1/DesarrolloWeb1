@@ -1,0 +1,18 @@
+<h2>Equipos disponibles</h2>
+
+{% for p in productos %}
+<div style="border:1px solid #ccc; padding:15px; margin:10px;">
+    
+    <h3>{{ p[1] }}</h3>
+    <p>Precio: ${{ p[3] }}</p>
+    <p>Stock: {{ p[2] }}</p>
+
+    <p>
+        Incluye: Split + Compresor + Control remoto + 
+        3m de tubería + cableado + instalación
+    </p>
+
+    <a href="/carrito/agregar/{{ p[0] }}">Agregar al carrito</a>
+
+</div>
+{% endfor %}

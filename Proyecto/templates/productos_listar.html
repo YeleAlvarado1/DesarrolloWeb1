@@ -9,9 +9,14 @@
 <a href="/productos/crear" class="btn btn-primary mb-3">
 Agregar Producto
 </a>
-<a href="/reporte" class="btn btn-primary mb-3">
-Descargar PDF
-</a>
+<form action="/reporte_productos" method="POST" class="form-reporte">
+    <input type="date" name="fecha_inicio" required>
+    <input type="date" name="fecha_fin" required>
+
+    <button type="submit" class="btn-pdf">
+         Descargar Reporte
+    </button>
+</form>
 
 <table class="table table-striped">
 

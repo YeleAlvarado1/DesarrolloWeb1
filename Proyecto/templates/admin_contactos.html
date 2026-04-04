@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Contactos recibidos</title>
+    <style>
+    body {
+        font-family: Arial;
+        background: linear-gradient(to right, #eef2f3, #dfe9f3);
+        margin: 0;
+        padding: 20px;
+    }
+
+    h1 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        background: white;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    th, td {
+        padding: 12px;
+        border: 1px solid #ccc;
+        text-align: center;
+    }
+
+    th {
+        background: #2c3e50;
+        color: white;
+    }
+
+    .btn {
+        padding: 5px 10px;
+        text-decoration: none;
+        color: white;
+        border-radius: 5px;
+        font-size: 12px;
+    }
+
+    .leer { background: green; }
+    .responder { background: blue; }
+    .eliminar { background: red; }
+
+    form {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    input, button {
+        padding: 8px;
+        margin: 5px;
+    }
+</style>
+</head>
+<body>
+
+<h1>Contactos recibidos</h1>
+
+<!--FORMULARIO REPORTE -->
+<form method="GET" action="/reporte_contactos">
+    <input type="date" name="fecha_inicio" required>
+    <input type="date" name="fecha_fin" required>
+    <button type="submit"> Descargar PDF</button>
+</form>
+
+<table>
+    <tr>
+        <th>Nombre</th>
+        <th>Teléfono</th>
+        <th>Correo</th>
+        <th>Mensaje</th>
+        <th>Fecha</th>
+        <th>Estado</th>
+        <th>Respuesta</th>
+        <th>Acciones</th>
+    </tr>
+
+    {% for c in contactos %}
+    <tr>
+        <td>{{ c[1] }}</td>
+        <td>{{ c[2] }}</td>
+        <td>{{ c[3] }}</td>
+        <td>{{ c[4] }}</td>
+        <td>{{ c[5] }}</td>
+        <td>{{ c[6] }}</td>
+        <td>{{ c[7] }}</td>
+        <td>
+
+    {% if c[6] == 'Pendiente' %}
+        <a href="/contacto/leido/{{ c[0] }}" class="btn leer">Leído</a>
+        <a href="/contacto/responder/{{ c[0] }}" class="btn responder">Responder</a>
+        <a href="/contacto/eliminar/{{ c[0] }}" class="btn eliminar">Eliminar</a>
+
+    {% elif c[6] == 'Leído' %}
+        <a href="/contacto/responder/{{ c[0] }}" class="btn responder">Responder</a>
+        <a href="/contacto/eliminar/{{ c[0] }}" class="btn eliminar">Eliminar</a>
+
+    {% elif c[6] == 'Respondido' %}
+        <span style="color: blue;">✔ Respondido</span>
+
+    {% elif c[6] == 'Eliminado' %}
+        <span style="color: red;">Eliminado</span>
+
+    {% endif %}
+
+</td>
+    </tr>
+    {% endfor %}
+</table>
+
+</body>
+</html>
