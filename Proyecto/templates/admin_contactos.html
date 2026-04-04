@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Contactos recibidos</title>
+
     <style>
     body {
         font-family: Arial;
@@ -42,11 +43,16 @@
         color: white;
         border-radius: 5px;
         font-size: 12px;
+        cursor: pointer;
     }
 
     .leer { background: green; }
     .responder { background: blue; }
     .eliminar { background: red; }
+
+    .eliminar:hover {
+        background: darkred;
+    }
 
     form {
         text-align: center;
@@ -57,13 +63,41 @@
         padding: 8px;
         margin: 5px;
     }
+
+    .alerta {
+        background: #d4edda;
+        padding: 10px;
+        margin-bottom: 15px;
+        border-radius: 5px;
+        text-align: center;
+    }
 </style>
+
+<!-- 🔥 AQUÍ ESTÁ LA CLAVE -->
+<script>
+function confirmarEliminacion() {
+    return confirm("¿Seguro que quieres eliminar este contacto? 👀");
+}
+</script>
+
 </head>
+
 <body>
 
 <h1>Contactos recibidos</h1>
 
-<!--FORMULARIO REPORTE -->
+<!-- MENSAJES FLASH -->
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alerta">
+        {{ message }}
+      </div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
+<!-- FORMULARIO REPORTE -->
 <form method="GET" action="/reporte_contactos">
     <input type="date" name="fecha_inicio" required>
     <input type="date" name="fecha_fin" required>
@@ -90,27 +124,38 @@
         <td>{{ c[4] }}</td>
         <td>{{ c[5] }}</td>
         <td>{{ c[6] }}</td>
-        <td>{{ c[7] }}</td>
+        <td>{{ c[7] if c[7] else 'Sin respuesta' }}</td>
         <td>
 
-    {% if c[6] == 'Pendiente' %}
-        <a href="/contacto/leido/{{ c[0] }}" class="btn leer">Leído</a>
-        <a href="/contacto/responder/{{ c[0] }}" class="btn responder">Responder</a>
-        <a href="/contacto/eliminar/{{ c[0] }}" class="btn eliminar">Eliminar</a>
+        {% if c[6] == 'Pendiente' %}
+            <a href="{{ url_for('marcar_leido', id=c[0]) }}" class="btn leer">Leído</a>
+            <a href="{{ url_for('responder_contacto', id=c[0]) }}" class="btn responder">Responder</a>
 
-    {% elif c[6] == 'Leído' %}
-        <a href="/contacto/responder/{{ c[0] }}" class="btn responder">Responder</a>
-        <a href="/contacto/eliminar/{{ c[0] }}" class="btn eliminar">Eliminar</a>
+            <!-- BOTÓN CORREGIDO -->
+            <a href="{{ url_for('eliminar_contacto', id=c[0]) }}" 
+               onclick="return confirmarEliminacion()"
+               class="btn eliminar">
+               Eliminar
+            </a>
 
-    {% elif c[6] == 'Respondido' %}
-        <span style="color: blue;">✔ Respondido</span>
+        {% elif c[6] == 'Leído' %}
+            <a href="{{ url_for('responder_contacto', id=c[0]) }}" class="btn responder">Responder</a>
 
-    {% elif c[6] == 'Eliminado' %}
-        <span style="color: red;">Eliminado</span>
+            <a href="{{ url_for('eliminar_contacto', id=c[0]) }}" 
+               onclick="return confirmarEliminacion()"
+               class="btn eliminar">
+               Eliminar
+            </a>
 
-    {% endif %}
+        {% elif c[6] == 'Respondido' %}
+            <span style="color: blue;">✔ Respondido</span>
 
-</td>
+        {% elif c[6] == 'Eliminado' %}
+            <span style="color: red;">Eliminado</span>
+
+        {% endif %}
+
+        </td>
     </tr>
     {% endfor %}
 </table>

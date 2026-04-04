@@ -78,7 +78,7 @@ def reporte_contactos():
 
     pdf = FPDF()
     pdf.add_page()
-    pdf.set_font("Arial", size=9)
+    pdf.set_font("Arial", size=8)
 
     pdf.cell(200, 10, txt="Reporte de Contactos - JAZ Climatización", ln=True)
     pdf.cell(200, 10, txt=f"Desde: {fecha_inicio} Hasta: {fecha_fin}", ln=True)
@@ -86,14 +86,18 @@ def reporte_contactos():
 
     headers = ["Nombre", "Teléfono", "Correo", "Mensaje", "Fecha", "Estado", "Eliminado por", "Fecha eliminado"]
 
+    ancho = 23
+
+    # ENCABEZADOS
     for h in headers:
-        pdf.cell(24, 8, h, border=1)
+        pdf.cell(ancho, 8, h, border=1, align="C")
     pdf.ln()
 
+    # DATOS
     for c in contactos:
         for dato in c:
             texto = str(dato) if dato else "-"
-            pdf.cell(24, 8, texto[:12], border=1)
+            pdf.cell(ancho, 8, texto[:12], border=1)
         pdf.ln()
 
     response = make_response(pdf.output(dest='S').encode('latin-1'))
@@ -164,17 +168,37 @@ def vaciar():
 @app.route("/carrito/agregar/<int:id>")
 def agregar_carrito(id):
 
-    carrito = session.get("carrito", {})  #  ahora es dict {id: cantidad}
+    carrito = session.get("carrito", {})
 
-    id = str(id)
-    if id in carrito:
-        carrito[id] += 1
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT cantidad, nombre FROM productos WHERE id=%s", (id,))
+    producto = cursor.fetchone()
+
+    stock = producto[0]
+    nombre = producto[1]
+
+    id_str = str(id)
+
+    # SIN STOCK
+    if stock <= 0:
+        flash(f" {nombre} está agotado (stock 0)")
+        return redirect(url_for("servicios"))
+
+    # 🛒 AGREGAR NORMAL
+    if id_str in carrito:
+        if carrito[id_str] < stock:
+            carrito[id_str] += 1
+        else:
+            flash(f" Solo hay {stock} unidades disponibles")
+            return redirect(url_for("servicios"))
     else:
-        carrito[id] = 1
+        carrito[id_str] = 1
 
     session["carrito"] = carrito
 
-    flash("Producto agregado al carrito 🛒")
+    flash(f" {nombre} agregado al carrito")
     return redirect(url_for("servicios"))
 
 # ===============================
@@ -430,7 +454,7 @@ def ver_contactos():
     cursor = conn.cursor()
 
     cursor.execute("""
-        SELECT id, nombre, telefono, correo, mensaje, fecha, estado
+        SELECT id, nombre, telefono, correo, mensaje, fecha, estado, respuesta
         FROM contactos
         ORDER BY fecha DESC
     """)
@@ -480,6 +504,7 @@ def eliminar_contacto(id):
 
     conn.commit()
     conn.close()
+    flash("Contacto eliminado correctamente 🗑️", "success") 
 
     return redirect(url_for("ver_contactos"))
 
