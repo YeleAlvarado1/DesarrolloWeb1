@@ -6,7 +6,7 @@ from conexion.conexion import get_connection
 def obtener_productos():
     conn = get_connection()
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM productos")
+    cursor.execute("SELECT id, nombre, cantidad, precio, estado FROM productos")
     productos = cursor.fetchall()
     conn.close()
     return productos

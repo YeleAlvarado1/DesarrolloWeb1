@@ -568,10 +568,28 @@ def crear_producto():
     return render_template("productos_crear.html")
 
 
-@app.route("/productos/eliminar/<int:id>")
+@app.route("/productos/eliminar/<int:id>", methods=["POST"])
 @login_required
 def eliminar_producto_view(id):
-    eliminar_producto(id)
+
+    motivo = request.form.get("motivo")
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        UPDATE productos
+        SET estado='eliminado',
+            eliminado_por=%s,
+            motivo_eliminacion=%s
+        WHERE id=%s
+    """, (session.get("usuario"), motivo, id))
+
+    conn.commit()
+    conn.close()
+
+    flash("Producto marcado como eliminado 🗑️", "warning")
+
     return redirect(url_for("productos"))
 
 @app.route("/productos/editar/<int:id>", methods=["GET", "POST"])
@@ -594,6 +612,27 @@ def editar_producto(id):
                            producto=producto, 
                            productos=productos)
 
+@app.route("/productos/restaurar/<int:id>")
+@login_required
+def restaurar_producto(id):
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        UPDATE productos
+        SET estado='activo',
+            eliminado_por=NULL,
+            motivo_eliminacion=NULL
+        WHERE id=%s
+    """, (id,))
+
+    conn.commit()
+    conn.close()
+
+    flash("Producto restaurado correctamente 🔄", "success")
+
+    return redirect(url_for("productos"))
 # ===============================
 # REPORTE PRODUCTOS
 # ===============================
@@ -732,7 +771,7 @@ def reporte_ventas():
     pdf = FPDF()
     pdf.add_page()
 
-    # 🧾 TÍTULO
+    # TÍTULO
     pdf.set_font("Arial", "B", 16)
     pdf.cell(0, 10, "Reporte de Ventas - JAZ Climatizacion", 0, 1, "C")
 
@@ -743,7 +782,7 @@ def reporte_ventas():
 
     pdf.ln(5)
 
-    # 🔵 ENCABEZADO
+    # ENCABEZADO
     pdf.set_fill_color(0, 102, 204)
     pdf.set_text_color(255, 255, 255)
     pdf.set_font("Arial", "B", 10)
@@ -760,27 +799,34 @@ def reporte_ventas():
 
     total_general = 0
 
+    
     for v in ventas:
         venta_id, fecha, cliente, producto, cantidad, precio = v
+
         subtotal = cantidad * precio
         total_general += subtotal
 
-        pdf.cell(20, 8, str(venta_id), 1)
-        pdf.cell(35, 8, str(fecha)[:16], 1)
-        pdf.cell(35, 8, cliente, 1)
+        lineas = pdf.multi_cell(50, 5, producto, border=0, split_only=True)
+        altura = 5 * len(lineas)
 
-        # producto adaptable
-        x = pdf.get_x()
-        y = pdf.get_y()
-        lineas = pdf.multi_cell(50, 8, producto, border=0, split_only=True)
-        altura = 8 * len(lineas)
+        x_inicial = pdf.get_x()
+        y_inicial = pdf.get_y()
 
-        pdf.multi_cell(50, 8, producto, border=1)
-        pdf.set_xy(x + 50, y)
+        pdf.cell(20, altura, str(venta_id), 1)
+        pdf.cell(35, altura, str(fecha)[:16], 1)
+        pdf.cell(35, altura, cliente, 1)
+
+        x_producto = pdf.get_x()
+        y_producto = pdf.get_y()
+
+        pdf.multi_cell(50, 5, producto, border=1)
+
+        pdf.set_xy(x_producto + 50, y_producto)
 
         pdf.cell(20, altura, str(cantidad), 1, 0, "C")
         pdf.cell(30, altura, f"${precio:.2f}", 1, 1, "C")
 
+    
     pdf.ln(5)
     pdf.set_font("Arial", "B", 12)
     pdf.cell(0, 10, f"Total vendido: ${total_general:.2f}", 0, 1, "R")

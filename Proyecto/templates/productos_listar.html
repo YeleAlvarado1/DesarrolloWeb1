@@ -9,6 +9,7 @@
 <a href="/productos/crear" class="btn btn-primary mb-3">
 Agregar Producto
 </a>
+
 <form action="/reporte_productos" method="POST" class="form-reporte">
     <input type="date" name="fecha_inicio" required>
     <input type="date" name="fecha_fin" required>
@@ -46,9 +47,24 @@ Agregar Producto
 Editar
 </a>
 
-<a href="/productos/eliminar/{{p[0]}}" class="btn btn-danger btn-sm">
-Eliminar
+<form action="{{ url_for('eliminar_producto_view', id=p[0]) }}" method="POST" 
+      onsubmit="return confirmarEliminar({{ p[0] }})"
+      style="display:inline;">
+
+    <input type="hidden" name="motivo" id="motivo_{{ p[0] }}">
+
+    <button type="submit" class="btn btn-danger btn-sm">
+        Eliminar
+    </button>
+</form>
+
+<!-- BOTÓN RESTAURAR -->
+{% if p|length > 4 and p[4] == 'eliminado' %}
+<a href="{{ url_for('restaurar_producto', id=p[0]) }}" 
+   class="btn btn-success btn-sm">
+   Restaurar
 </a>
+{% endif %}
 
 </td>
 
@@ -61,5 +77,17 @@ Eliminar
 </table>
 
 </div>
+<script>
+function confirmarEliminar(id) {
+    let motivo = prompt("¿Por qué deseas eliminar este producto?");
+    if (!motivo) {
+        return false;
+    }
+
+    document.getElementById("motivo_" + id).value = motivo;
+
+    return confirm("¿Seguro que quieres eliminar este producto?");
+}
+</script>
 
 {% endblock %}
